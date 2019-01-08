@@ -21,7 +21,10 @@
 
 ## TODO LIST
 
-- 비즈니스 캔버스 구상해보기 (해보고 싶다면)
+- [비즈니스 캔버스](http://blog.naver.com/PostView.nhn?blogId=whyble&logNo=220650085873) 구상해보기 (해보고 싶다면)
+
+<img src="img/BMC.png">
+
 - 역할 분담 하기
 - 유저 사용 시나리오 정하기
 - 개발 방법론 적용
