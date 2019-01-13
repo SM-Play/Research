@@ -49,3 +49,13 @@
 - 기간: 약 2개월
 - 목표: 
 - 예산: 
+
+## Reference
+
+> 얼굴 인식 서비스 비교 [링크](https://www.kairos.com/blog/face-recognition-kairos-vs-microsoft-vs-google-vs-amazon-vs-opencv)
+> 
+> Face Landmark 상용 서비스 [링크](https://www.faceplusplus.com/landmarks/#demo)
+>
+> 아이폰 X 이상이라면 [링크](https://blogs.unity3d.com/kr/2017/12/03/create-your-own-animated-emojis-with-unity/)
+>
+> 파이썬, OpenCV 를 이용한 Face Landmark [링크](https://www.pyimagesearch.com/2017/04/03/facial-landmarks-dlib-opencv-python/)
