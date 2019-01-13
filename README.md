@@ -83,9 +83,10 @@ Github Commit Message Rule
 
 Others
 ------
-###[microsoft Face API] https://azure.microsoft.com/ko-kr/services/cognitive-services/face
+###[microsoft Face API](https://azure.microsoft.com/ko-kr/services/cognitive-services/face)
 알아본 결과단순 얼굴인식으로 그치는 수준이 아닌 안경을 썻는지 부터, 화장을 했는지, 표정, 등등의 다양한 정보 추출 가능, 1달 에 30,000 건 까지 무료사용
 
+```
 Detection Result:
 3 faces detected
 ~~
@@ -139,5 +140,4 @@ Detection Result:
 },
 “glasses”: “NoGlasses”
 }
-
-
+```
