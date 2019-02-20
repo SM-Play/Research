@@ -21,10 +21,13 @@ args = vars(ap.parse_args())
 # extract the OpenCV version info
 (major, minor) = cv2.__version__.split(".")[:2]
 
+MAX_TRACKER = 2
+now_tracker = 0
+
 # if we are using OpenCV 3.2 OR BEFORE, we can use a special factory
 # function to create our object tracker
 if int(major) == 3 and int(minor) < 3:
-	tracker = cv2.Tracker_create(args["tracker"].upper())
+	tracker = [cv2.Tracker_create(args["tracker"].upper()) for _ in range(MAX_TRACKER)]
 
 # otherwise, for OpenCV 3.3 OR NEWER, we need to explicity call the
 # approrpiate object tracker constructor:
@@ -43,7 +46,7 @@ else:
 
 	# grab the appropriate object tracker using our dictionary of
 	# OpenCV object tracker objects
-	tracker = OPENCV_OBJECT_TRACKERS[args["tracker"]]()
+	tracker = [OPENCV_OBJECT_TRACKERS[args["tracker"]]() for _ in range(MAX_TRACKER)]
 
 # initialize the bounding box coordinates of the object we are going
 # to track
@@ -75,19 +78,20 @@ while True:
 
 	# resize the frame (so we can process it faster) and grab the
 	# frame dimensions
-	frame = imutils.resize(frame, width=500)
+	frame = imutils.resize(frame, width=640)
 	(H, W) = frame.shape[:2]
 
 	# check to see if we are currently tracking an object
-	if initBB is not None:
+	if now_tracker > 0:
 		# grab the new bounding box coordinates of the object
-		(success, box) = tracker.update(frame)
+		for i in range(now_tracker):
+			(success, box) = tracker[i].update(frame)
 
-		# check to see if the tracking was a success
-		if success:
-			(x, y, w, h) = [int(v) for v in box]
-			cv2.rectangle(frame, (x, y), (x + w, y + h),
-				(0, 255, 0), 2)
+			# check to see if the tracking was a success
+			if success:
+				(x, y, w, h) = [int(v) for v in box]
+				cv2.rectangle(frame, (x, y), (x + w, y + h),
+					(0, 255, 0), 2)
 
 		# update the FPS counter
 		fps.update()
@@ -113,7 +117,7 @@ while True:
 
 	# if the 's' key is selected, we are going to "select" a bounding
 	# box to track
-	if key == ord("s"):
+	if key == ord("s") and now_tracker < MAX_TRACKER:
 		# select the bounding box of the object we want to track (make
 		# sure you press ENTER or SPACE after selecting the ROI)
 		initBB = cv2.selectROI("Frame", frame, fromCenter=False,
@@ -121,10 +125,15 @@ while True:
 
 		# start OpenCV object tracker using the supplied bounding box
 		# coordinates, then start the FPS throughput estimator as well
-		tracker.init(frame, initBB)
+		tracker[now_tracker].init(frame, initBB)
+		now_tracker += 1
 		fps = FPS().start()
 
 	# if the `q` key was pressed, break from the loop
+	elif key == ord("r"):
+		now_tracker = 0
+		tracker = [OPENCV_OBJECT_TRACKERS[args["tracker"]]() for _ in range(MAX_TRACKER)]
+
 	elif key == ord("q"):
 		break
 
