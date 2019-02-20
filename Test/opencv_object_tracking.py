@@ -14,14 +14,14 @@ import cv2
 ap = argparse.ArgumentParser()
 ap.add_argument("-v", "--video", type=str,
 	help="path to input video file")
-ap.add_argument("-t", "--tracker", type=str, default="kcf",
+ap.add_argument("-t", "--tracker", type=str, default="csrt",
 	help="OpenCV object tracker type")
 args = vars(ap.parse_args())
 
 # extract the OpenCV version info
 (major, minor) = cv2.__version__.split(".")[:2]
 
-MAX_TRACKER = 2
+MAX_TRACKER = 10
 now_tracker = 0
 
 # if we are using OpenCV 3.2 OR BEFORE, we can use a special factory
@@ -90,8 +90,14 @@ while True:
 			# check to see if the tracking was a success
 			if success:
 				(x, y, w, h) = [int(v) for v in box]
+				if i == 0:
+					if 0 <= x < W and 0 <= y < H and h > 0 and w > 0:
+						crop_face = frame[y:y+h, x:x+w]
+						cv2.imshow("face", crop_face)
 				cv2.rectangle(frame, (x, y), (x + w, y + h),
 					(0, 255, 0), 2)
+				text = "Face" if i == 0 else "Hand"
+				cv2.putText(frame, text, (x, y), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 255), 2)
 
 		# update the FPS counter
 		fps.update()
@@ -106,10 +112,10 @@ while True:
 		]
 
 		# loop over the info tuples and draw them on our frame
-		for (i, (k, v)) in enumerate(info):
-			text = "{}: {}".format(k, v)
-			cv2.putText(frame, text, (10, H - ((i * 20) + 20)),
-				cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 255), 2)
+		# for (i, (k, v)) in enumerate(info):
+		#	text = "{}: {}".format(k, v)
+		#	cv2.putText(frame, text, (10, H - ((i * 20) + 20)),
+		#		cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 255), 2)
 
 	# show the output frame
 	cv2.imshow("Frame", frame)
@@ -133,6 +139,7 @@ while True:
 	elif key == ord("r"):
 		now_tracker = 0
 		tracker = [OPENCV_OBJECT_TRACKERS[args["tracker"]]() for _ in range(MAX_TRACKER)]
+		cv2.destroyWindow("face")
 
 	elif key == ord("q"):
 		break
