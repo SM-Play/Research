@@ -12,10 +12,8 @@ import cv2
 
 # construct the argument parser and parse the arguments
 ap = argparse.ArgumentParser()
-ap.add_argument("-v", "--video", type=str,
-	help="path to input video file")
-ap.add_argument("-t", "--tracker", type=str, default="csrt",
-	help="OpenCV object tracker type")
+ap.add_argument("-v", "--video", type=str, help="path to input video file")
+ap.add_argument("-t", "--tracker", type=str, default="csrt", help="OpenCV object tracker type")
 args = vars(ap.parse_args())
 
 # extract the OpenCV version info
@@ -94,8 +92,7 @@ while True:
 					if 0 <= x < W and 0 <= y < H and h > 0 and w > 0:
 						crop_face = frame[y:y+h, x:x+w]
 						cv2.imshow("face", crop_face)
-				cv2.rectangle(frame, (x, y), (x + w, y + h),
-					(0, 255, 0), 2)
+				cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
 				text = "Face" if i == 0 else "Hand"
 				cv2.putText(frame, text, (x, y), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 255), 2)
 
